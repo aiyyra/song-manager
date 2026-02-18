@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/aiyyra/song-manager/internal/playlist"
 )
 
 func Download(videoID string) error {
@@ -26,5 +28,17 @@ func Download(videoID string) error {
 	}
 
 	fmt.Println("Download complete")
+	return nil
+}
+
+func DownloadPlaylist(playlistID string) error {
+	data, _ := playlist.Inspect(playlistID)
+
+	for i, entry := range data.Entries {
+		fmt.Printf("Downloading: %02d | %s | %s\n", i+1, entry.Title, entry.ID)
+		if err := Download(entry.ID); err != nil {
+			fmt.Printf("Download for `%s` failed\n", entry.Title)
+		}
+	}
 	return nil
 }

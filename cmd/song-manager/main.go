@@ -29,7 +29,7 @@ func main() {
 			fmt.Println("error: --playlist is required")
 			os.Exit(1)
 		}
-		if err := playlist.Inspect(*playlistID); err != nil {
+		if _, err := playlist.Inspect(*playlistID); err != nil {
 			fmt.Println("error: ", err)
 			os.Exit(1)
 		}
@@ -54,6 +54,25 @@ func main() {
 			}
 		}
 
+	case "fetch":
+		{
+			fetchCMD := flag.NewFlagSet("fetch", flag.ExitOnError)
+			playlistID := fetchCMD.String("playlist", "", "Youtube Playlist ID")
+
+			if err := fetchCMD.Parse(os.Args[2:]); err != nil {
+				fmt.Println("Error: ", err)
+				os.Exit(1)
+			}
+
+			if *playlistID == "" {
+				fmt.Println("Error: --video is required")
+				os.Exit(1)
+			}
+			if err := downloader.DownloadPlaylist(*playlistID); err != nil {
+				fmt.Println("Error: ", err)
+				os.Exit(1)
+			}
+		}
 	default:
 		fmt.Println("Unknown command: ", os.Args[1])
 		os.Exit(1)
