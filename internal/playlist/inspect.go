@@ -9,9 +9,13 @@ import (
 
 type YTDLPPlaylist struct {
 	Entries []struct {
-		ID    string `json:"id"`
-		Title string `json:"title"`
+		Entry
 	} `json:"entries"`
+}
+
+type Entry struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
 }
 
 func Inspect(playlistID string) error {

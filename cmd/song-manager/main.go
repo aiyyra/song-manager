@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aiyyra/song-manager/internal/downloader"
 	"github.com/aiyyra/song-manager/internal/playlist"
 )
 
@@ -32,6 +33,27 @@ func main() {
 			fmt.Println("error: ", err)
 			os.Exit(1)
 		}
+
+	case "download":
+		{
+			downloadCMD := flag.NewFlagSet("download", flag.ExitOnError)
+			videoID := downloadCMD.String("video", "", "Video ID")
+
+			if err := downloadCMD.Parse(os.Args[2:]); err != nil {
+				fmt.Println("Error: ", err)
+				os.Exit(1)
+			}
+
+			if *videoID == "" {
+				fmt.Println("Error: --video is required")
+				os.Exit(1)
+			}
+			if err := downloader.Download(*videoID); err != nil {
+				fmt.Println("Error: ", err)
+				os.Exit(1)
+			}
+		}
+
 	default:
 		fmt.Println("Unknown command: ", os.Args[1])
 		os.Exit(1)
